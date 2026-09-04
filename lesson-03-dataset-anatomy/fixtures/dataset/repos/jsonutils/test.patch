@@ -1,0 +1,10 @@
+--- a/test_jsonutils.py
++++ b/test_jsonutils.py
+@@ -3,3 +3,7 @@
+ 
+ def test_keys():
+     assert jsonutils.keys({"a": 1, "b": 2}) == ["a", "b"]
++
++
++def test_flatten_nested():
++    assert jsonutils.flatten({"a": {"b": 1}}) == {"a.b": 1}

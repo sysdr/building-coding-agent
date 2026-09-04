@@ -1,0 +1,10 @@
+--- a/test_mathutils.py
++++ b/test_mathutils.py
+@@ -3,3 +3,7 @@
+ 
+ def test_add():
+     assert mathutils.add(2, 3) == 5
++
++
++def test_average():
++    assert mathutils.average([2, 4, 6]) == 4

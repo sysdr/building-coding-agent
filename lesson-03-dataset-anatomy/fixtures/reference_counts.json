@@ -1,0 +1,20 @@
+{
+  "_comment": [
+    "Ground truth recorded on the reference machine with tiktoken 0.14.0,",
+    "encoding cl100k_base, Python 3.12.3. These are REAL measured counts, not",
+    "estimates. Regenerate with: make fixtures (needs the [exact] extra).",
+    "They are NOT a provider's billed usage figure -- an API's reported usage",
+    "also counts message framing and tool schemas, which these payloads have",
+    "none of. What they establish is that the exact counter is reproducible;",
+    "what they do not establish is your invoice."
+  ],
+  "encoding": "cl100k_base",
+  "tiktoken_version": "0.14.0",
+  "counts": {
+    "issue.md": 227,
+    "observation.txt": 242,
+    "patch.diff": 290,
+    "source.py": 420,
+    "traceback.txt": 317
+  }
+}

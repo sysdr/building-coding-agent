@@ -1,0 +1,4 @@
+{
+  "statement": "A minimal single-agent bash-and-edit scaffold resolves at least as many dev-slice instances as a three-role Planner-Coder-Reviewer swarm, at equal or lower total token cost.",
+  "would_disprove": "On the same 20-instance dev slice, at equal or lower cost, the swarm resolves strictly more instances than the single agent, across two repeated runs."
+}

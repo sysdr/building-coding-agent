@@ -1,0 +1,8 @@
+services:
+  apr:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: apr-lesson01:0.1.0
+    working_dir: /app
+    command: ["doctor"]

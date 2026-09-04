@@ -1,0 +1,10 @@
+--- a/test_strutils.py
++++ b/test_strutils.py
+@@ -3,3 +3,7 @@
+ 
+ def test_upper():
+     assert strutils.upper("ok") == "OK"
++
++
++def test_reverse_words():
++    assert strutils.reverse_words("one two three") == "three two one"
