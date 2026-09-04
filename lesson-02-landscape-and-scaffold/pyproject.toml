@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools==68.1.2", "wheel==0.42.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apr"
+version = "0.1.0"
+description = "Autonomous Program Repair course scaffold — Lesson 2"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+# The CORE package has zero required third-party dependencies, tests included
+# — it uses unittest from the standard library, so the whole lesson runs with
+# no network at all. Exact tokenisation (inherited from Lesson 1) is opt-in
+# for exactly that reason: it is the one thing here that needs a wheel, and
+# the gate degrades to recorded reference counts without it, out loud.
+exact = ["tiktoken>=0.7,<1.0"]
+
+[project.scripts]
+apr = "apr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
