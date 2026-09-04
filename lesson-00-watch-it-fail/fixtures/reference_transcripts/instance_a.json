@@ -1,0 +1,62 @@
+{
+  "instance": "a",
+  "backend": "fixture",
+  "turns_used": 3,
+  "stopped_reason": "model_done",
+  "resolved": true,
+  "transcript": [
+    {
+      "role": "system",
+      "content": "You are a coding agent with a single tool: bash. You are given a git repository with a failing test suite and an issue describing the bug. Explore the repo, write a patch, and stop when you believe the failing test now passes. Respond with a JSON object: either {\"bash\": \"<command>\"} to run a shell command, or {\"done\": true} to stop."
+    },
+    {
+      "role": "user",
+      "content": "Issue:\nadd(2, 3) returns -1 instead of 5. Something in calc.py is wrong.\n\nRepo is at /tmp/apr-demo-a-ge8ye09b/repo."
+    },
+    {
+      "role": "assistant",
+      "content": {
+        "bash": "cat calc.py"
+      }
+    },
+    {
+      "role": "tool",
+      "content": {
+        "command": "cat calc.py",
+        "output": "def add(a, b):\n    return a - b  # bug: should add, not subtract\n"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": {
+        "bash": "sed -i 's/return a - b  # bug: should add, not subtract/return a + b/' calc.py"
+      }
+    },
+    {
+      "role": "tool",
+      "content": {
+        "command": "sed -i 's/return a - b  # bug: should add, not subtract/return a + b/' calc.py",
+        "output": ""
+      }
+    },
+    {
+      "role": "assistant",
+      "content": {
+        "bash": "python3 test_calc.py"
+      }
+    },
+    {
+      "role": "tool",
+      "content": {
+        "command": "python3 test_calc.py",
+        "output": "OK\n"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": {
+        "done": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+services:
+  lesson-00:
+    build: ..
+    environment:
+      - APR_MODEL_API_KEY=${APR_MODEL_API_KEY:-}
+    command: ["/lesson/.venv/bin/python3", "demo_agent.py", "demo", "--instance", "a", "--fixture"]

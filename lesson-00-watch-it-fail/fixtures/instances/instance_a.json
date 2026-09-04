@@ -1,0 +1,10 @@
+{
+  "repo_fixture": "repo_a",
+  "issue_text": "add(2, 3) returns -1 instead of 5. Something in calc.py is wrong.",
+  "fixture_turns": [
+    {"bash": "cat calc.py"},
+    {"bash": "sed -i 's/return a - b  # bug: should add, not subtract/return a + b/' calc.py"},
+    {"bash": "python3 test_calc.py"},
+    {"done": true}
+  ]
+}

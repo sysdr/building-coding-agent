@@ -1,0 +1,10 @@
+{
+  "repo_fixture": "repo_b",
+  "issue_text": "apply_discount(200, 10) returns 190 instead of 180. A 10% discount on 200 should take off 20, not 10.",
+  "fixture_turns": [
+    {"bash": "cat discount.py"},
+    {"bash": "sed -i 's/# bug: pct is a whole number/# fixed: pct is a percentage/' discount.py"},
+    {"bash": "python3 test_discount.py"},
+    {"done": true}
+  ]
+}
