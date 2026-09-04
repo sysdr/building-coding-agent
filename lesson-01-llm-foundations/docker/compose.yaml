@@ -1,0 +1,8 @@
+services:
+  apr:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    working_dir: /work
+    volumes:
+      - ../fixtures:/work/fixtures:ro

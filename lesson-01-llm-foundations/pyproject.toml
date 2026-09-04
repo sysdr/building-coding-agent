@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools==68.1.2", "wheel==0.42.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apr"
+version = "0.1.0"
+description = "Autonomous Program Repair course scaffold — Lesson 1"
+requires-python = ">=3.11"
+
+# The core package has ZERO required third-party dependencies, so the whole
+# lesson runs on a machine with no network at all. Exact tokenisation is an
+# opt-in extra: the gate degrades to comparing against recorded reference
+# counts when it is absent, and says so out loud rather than silently.
+dependencies = []
+
+[project.optional-dependencies]
+exact = ["tiktoken>=0.7,<1.0"]
+
+[project.scripts]
+apr = "apr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

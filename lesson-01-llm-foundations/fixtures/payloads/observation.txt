@@ -1,0 +1,20 @@
+$ ls -la src/apr/
+total 40
+drwxrwxr-x 2 user user  4096 Aug 26 16:19 .
+drwxrwxr-x 3 user user  4096 Aug 26 16:10 ..
+-rw-rw-r-- 1 user user   295 Aug 26 16:10 __init__.py
+-rw-rw-r-- 1 user user  2348 Aug 26 16:10 claims.py
+-rw-rw-r-- 1 user user  2259 Aug 26 16:10 cli.py
+-rw-rw-r-- 1 user user  2176 Aug 26 16:10 doctor.py
+
+$ python -m pytest tests/ -q
+....F...                                                                 [100%]
+1 failed, 7 passed in 0.42s
+
+$ git status --porcelain
+ M src/apr/claims.py
+?? .apr/claims.json
+
+$ git diff --stat
+ src/apr/claims.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
