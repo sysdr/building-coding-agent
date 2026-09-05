@@ -1,0 +1,13 @@
+--- a/jsonutils.py
++++ b/jsonutils.py
+@@ -5,5 +5,9 @@
+ def flatten(d, prefix=""):
+     out = {}
+     for k, v in d.items():
+-        out[prefix + k] = v
++        key = prefix + k
++        if isinstance(v, dict):
++            out.update(flatten(v, key + "."))
++        else:
++            out[key] = v
+     return out

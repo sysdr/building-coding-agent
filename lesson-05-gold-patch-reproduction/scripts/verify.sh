@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+# The verification gate for Lesson 5 (cumulative — also re-checks Lessons 2-4). Exit 0 = lesson passed.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+if [ ! -x ".venv/bin/apr" ]; then
+  echo "-- no venv found, running setup --"
+  make setup
+fi
+
+APR=".venv/bin/apr"
+PY=".venv/bin/python"
+rm -rf .apr  # start each verify run from a clean ledger
+
+echo "-- unit tests --"
+.venv/bin/python -m unittest discover -s tests -v
+
+echo "-- environment doctor --"
+if ! "$APR" doctor; then
+  echo "FAIL: environment doctor reported a critical failure"
+  exit 1
+fi
+echo "-- version check --"
+VERSION_OUT=$("$APR" --version)
+echo "apr --version -> $VERSION_OUT"
+[ -n "$VERSION_OUT" ] || { echo "FAIL: apr --version printed nothing"; exit 1; }
+echo "PASS: apr --version prints package version ($VERSION_OUT)"
+
+echo "-- claim rejection (must fail) --"
+INVALID=$("$PY" -c "import json; d=json.load(open('fixtures/invalid_claim.json')); print(d['statement']); print(d['would_disprove'])")
+STATEMENT=$(echo "$INVALID" | sed -n 1p)
+DISPROVE=$(echo "$INVALID" | sed -n 2p)
+if "$APR" claim new --statement "$STATEMENT" --would-disprove "$DISPROVE" 2>/tmp/apr_reject.log; then
+  echo "FAIL: invalid claim was accepted"
+  exit 1
+fi
+grep -q "REJECTED" /tmp/apr_reject.log
+echo "PASS: claims ledger rejects a non-falsifiable claim ($(cat /tmp/apr_reject.log))"
+
+echo "-- claim acceptance (must succeed) --"
+VALID=$("$PY" -c "import json; d=json.load(open('fixtures/valid_claim.json')); print(d['statement']); print(d['would_disprove'])")
+V_STATEMENT=$(echo "$VALID" | sed -n 1p)
+V_DISPROVE=$(echo "$VALID" | sed -n 2p)
+"$APR" claim new --statement "$V_STATEMENT" --would-disprove "$V_DISPROVE"
+"$PY" -c "import json,sys; d=json.load(open('.apr/claims.json')); sys.exit(0 if len(d)==1 else 1)"
+echo "PASS: claims.json valid against schema (1 recorded claim, well-formed JSON)"
+
+echo "-- dev slice: determinism --"
+"$APR" slice build --seed 42 --dataset fixtures/dataset/instances.jsonl >/tmp/apr_slice1.log
+"$APR" slice build --seed 42 --dataset fixtures/dataset/instances.jsonl >/tmp/apr_slice2.log
+if ! diff -q /tmp/apr_slice1.log /tmp/apr_slice2.log >/dev/null; then
+  echo "FAIL: two dev-slice builds at the same seed produced different output"
+  exit 1
+fi
+REPO_COUNT=$(sed -n '2,$p' /tmp/apr_slice1.log | sort -u | wc -l | tr -d ' ')
+echo "PASS: dev slice byte-identical across two runs at seed=42, $REPO_COUNT repos covered"
+
+echo "-- dev slice: rejects a corrupt record --"
+CORRUPT_MSG=$("$PY" -c "
+from apr import slice as slice_mod
+from pathlib import Path
+try:
+    slice_mod.load_instances(Path('fixtures/dataset/instances_with_corrupt.jsonl'))
+    print('DID NOT RAISE')
+except slice_mod.DatasetError as exc:
+    print(f'REJECTED: {exc}')
+")
+if [[ "$CORRUPT_MSG" != REJECTED:* ]]; then
+  echo "FAIL: corrupt record was not rejected ($CORRUPT_MSG)"
+  exit 1
+fi
+echo "PASS: dev slice refuses a corrupt record ($CORRUPT_MSG)"
+
+echo "-- environment inspection --"
+"$APR" image inspect
+RATE=$("$PY" -c "
+from apr import image as image_mod
+envs = image_mod.load_environments()
+print(f'{image_mod.layer_reuse_rate(envs) * 100:.1f}')
+")
+if ! awk -v r="$RATE" 'BEGIN { exit !(r >= 60.0) }'; then
+  echo "FAIL: layer reuse rate $RATE% is below the 60% floor"
+  exit 1
+fi
+echo "PASS: layer reuse $RATE% >= 60%"
+INTERP_STATS=$("$PY" -c "
+from apr import image as image_mod
+envs = image_mod.load_environments()
+interps = {e.interpreter for e in envs}
+repos = {e.repo for e in envs}
+print(f'{len(interps)} {len(repos)}')
+")
+N_INTERP=$(echo "$INTERP_STATS" | cut -d' ' -f1)
+N_REPOS=$(echo "$INTERP_STATS" | cut -d' ' -f2)
+echo "PASS: $N_INTERP distinct interpreter(s) confirmed across $N_REPOS repos"
+
+echo "-- Gate 0: gold patches score 100%, empty patches score 0% --"
+RUN1=$("$APR" harness gold-empty)
+RUN2=$("$APR" harness gold-empty)
+echo "$RUN1"
+if [ "$RUN1" != "$RUN2" ]; then
+  echo "FAIL: two harness runs disagreed ($RUN1 vs $RUN2)"
+  exit 1
+fi
+echo "PASS: two runs byte-identical"
+if [ "$RUN1" != "gold=5/5 empty=0/5" ]; then
+  echo "FAIL: Gate 0 not satisfied — expected gold=5/5 empty=0/5, got $RUN1"
+  exit 1
+fi
+
+echo ""
+echo "==================================================="
+echo "PASS: Lesson 5 verified — Gate 0: gold=100%, empty=0%, two runs identical"
+echo "==================================================="

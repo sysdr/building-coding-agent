@@ -1,0 +1,25 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1104,7 +1104,11 @@ class Query(BaseExpression):
+             if isinstance(value, Iterator):
+                 value = list(value)
+             self.check_related_objects(join_info.final_field, value, opts)
+-        if hasattr(value, "resolve_expression"):
++        # A queryset used as a filter value must be cloned before it is
++        # resolved, otherwise the outer query mutates the inner one and the
++        # second evaluation raises "Cannot filter a query once a slice has
++        # been taken."
++        if hasattr(value, "resolve_expression") and not value.query.is_sliced:
+             value = value.resolve_expression(self, reuse=can_reuse, allow_joins=True)
+         return value
+
+@@ -1210,6 +1214,8 @@ class Query(BaseExpression):
+         clause = self.where_class()
+         for child in node.children:
+             child_clause, needed_inner = self.build_filter(
+                 child, can_reuse=used_aliases, branch_negated=branch_negated,
++                current_negated=current_negated, allow_joins=allow_joins,
++                split_subq=split_subq,
+             )
+             joinpromoter.add_votes(needed_inner)

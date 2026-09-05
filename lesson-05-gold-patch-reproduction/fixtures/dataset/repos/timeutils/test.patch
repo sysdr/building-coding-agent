@@ -1,0 +1,10 @@
+--- a/test_timeutils.py
++++ b/test_timeutils.py
+@@ -3,3 +3,7 @@
+ 
+ def test_is_weekend():
+     assert timeutils.is_weekend(6) is True
++
++
++def test_add_days():
++    assert timeutils.add_days(5, 3) == 1

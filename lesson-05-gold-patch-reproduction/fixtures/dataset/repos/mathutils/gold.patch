@@ -1,0 +1,8 @@
+--- a/mathutils.py
++++ b/mathutils.py
+@@ -3,4 +3,4 @@
+ 
+ 
+ def average(nums):
+-    return sum(nums) / (len(nums) - 1)
++    return sum(nums) / len(nums)
