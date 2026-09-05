@@ -1,0 +1,14 @@
+--- a/listutils.py
++++ b/listutils.py
+@@ -3,4 +3,10 @@
+ 
+ 
+ def unique(lst):
+-    return list(set(lst))
++    seen = set()
++    out = []
++    for x in lst:
++        if x not in seen:
++            seen.add(x)
++            out.append(x)
++    return out

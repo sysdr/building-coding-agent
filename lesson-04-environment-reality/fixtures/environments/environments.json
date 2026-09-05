@@ -1,0 +1,15 @@
+[
+  {"repo": "mathutils", "instance_id": "mathutils__mathutils-1", "interpreter": "python3.11", "pins": ["numpy==1.26.4"], "toolchain": "gcc"},
+  {"repo": "mathutils", "instance_id": "mathutils__mathutils-2", "interpreter": "python3.11", "pins": ["numpy==1.26.4"], "toolchain": "gcc"},
+  {"repo": "mathutils", "instance_id": "mathutils__mathutils-3", "interpreter": "python3.11", "pins": ["numpy==1.26.4"], "toolchain": "gcc"},
+  {"repo": "mathutils", "instance_id": "mathutils__mathutils-4", "interpreter": "python3.11", "pins": ["numpy==1.26.4"], "toolchain": "gcc"},
+  {"repo": "strutils", "instance_id": "strutils__strutils-1", "interpreter": "python3.11", "pins": ["regex==2024.4.16"], "toolchain": null},
+  {"repo": "strutils", "instance_id": "strutils__strutils-2", "interpreter": "python3.11", "pins": ["regex==2024.4.16"], "toolchain": null},
+  {"repo": "strutils", "instance_id": "strutils__strutils-3", "interpreter": "python3.11", "pins": ["regex==2024.4.16"], "toolchain": null},
+  {"repo": "listutils", "instance_id": "listutils__listutils-1", "interpreter": "python3.12", "pins": [], "toolchain": null},
+  {"repo": "jsonutils", "instance_id": "jsonutils__jsonutils-1", "interpreter": "python3.11", "pins": ["orjson==3.10.3"], "toolchain": "rust"},
+  {"repo": "jsonutils", "instance_id": "jsonutils__jsonutils-2", "interpreter": "python3.11", "pins": ["orjson==3.10.3"], "toolchain": "rust"},
+  {"repo": "jsonutils", "instance_id": "jsonutils__jsonutils-3", "interpreter": "python3.11", "pins": ["orjson==3.10.3"], "toolchain": "rust"},
+  {"repo": "timeutils", "instance_id": "timeutils__timeutils-1", "interpreter": "python3.11", "pins": ["pytz==2024.1"], "toolchain": null},
+  {"repo": "timeutils", "instance_id": "timeutils__timeutils-2", "interpreter": "python3.11", "pins": ["pytz==2024.1"], "toolchain": null}
+]
